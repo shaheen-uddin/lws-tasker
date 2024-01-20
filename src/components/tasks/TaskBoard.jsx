@@ -20,7 +20,9 @@ export default function TaskBoard() {
     priority: "High",
     isFavorite: true,
   };
-  const [tasks, setTasks] = useState([defaultTask]);
+  const [tasks, setTasks] = useState(
+    storedData.length > 0 ? storedData : [defaultTask]
+  );
   const [showAddModal, setShowAddModal] = useState(false);
   const [taskToUpdate, setTaskToUpdate] = useState(null);
 
@@ -37,7 +39,7 @@ export default function TaskBoard() {
     }
 
     saveToLocalStorage("tasks", tasks);
-    //console.log(tasks);
+    console.log(tasks);
     setShowAddModal(false);
   };
 
@@ -46,11 +48,19 @@ export default function TaskBoard() {
     setTaskToUpdate(editTask);
     console.log(editTask);
   };
-  console.log(tasks.length);
+
+  const handleDelete = (taskId) => {
+    setTasks(tasks.filter((task) => task.id != taskId));
+  };
+  console.log(tasks);
   return (
     <section className="mb-20" id="tasks">
       {showAddModal && (
-        <AddTaskModal onSave={handleAddTask} taskToUpdate={taskToUpdate} />
+        <AddTaskModal
+          onSave={handleAddTask}
+          taskToUpdate={taskToUpdate}
+          onClose={() => setShowAddModal(false)}
+        />
       )}
       <div className="container mx-auto">
         <SearchTask />
@@ -60,7 +70,7 @@ export default function TaskBoard() {
               setShowAddModal(true);
             }}
           />
-          <TaskList tasks={tasks} onEdit={handleEdit} />
+          <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} />
         </div>
       </div>
     </section>
