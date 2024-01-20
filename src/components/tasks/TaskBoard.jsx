@@ -4,6 +4,7 @@ import TaskActions from "./TaskActions";
 import TaskList from "./TaskList";
 import AddTaskModal from "./AddTaskModal";
 import { saveToLocalStorage, readFromLocalStorage } from "./../../utils/utils";
+import NoTaskFound from "./NoTaskFound";
 
 const storedData = readFromLocalStorage("tasks");
 // storedData.length > 0 ? [storedData] : [defaultTask]
@@ -52,6 +53,19 @@ export default function TaskBoard() {
   const handleDelete = (taskId) => {
     setTasks(tasks.filter((task) => task.id != taskId));
   };
+
+  const handleDeleteAll = () => {
+    tasks.length = 0;
+    setTasks([...tasks]);
+  };
+
+  const handleFavoriteToggle = (taskId) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, isFavorite: !task.isFavorite } : task
+      )
+    );
+  };
   console.log(tasks);
   return (
     <section className="mb-20" id="tasks">
@@ -69,8 +83,18 @@ export default function TaskBoard() {
             onAddTask={() => {
               setShowAddModal(true);
             }}
+            onDeleteAll={handleDeleteAll}
           />
-          <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} />
+          {tasks.length > 0 ? (
+            <TaskList
+              tasks={tasks}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onFavClick={handleFavoriteToggle}
+            />
+          ) : (
+            <NoTaskFound />
+          )}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { FaStar } from "react-icons/fa";
 
-export default function TaskList({ tasks, onEdit, onDelete }) {
+export default function TaskList({ tasks, onEdit, onDelete, onFavClick }) {
   console.log("task from tasklist: ", tasks);
   console.log("length: " + tasks.length);
   return (
@@ -35,7 +35,7 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
                 key={task.id}
                 className="border-b border-[#2E3443] [&>td]:align-baseline [&>td]:px-4 [&>td]:py-2"
               >
-                <td>
+                <td onClick={() => onFavClick(task.id)}>
                   {task.isFavorite ? (
                     <FaStar color="yellow" />
                   ) : (
